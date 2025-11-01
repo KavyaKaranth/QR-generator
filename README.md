@@ -5,5 +5,7 @@ A simple web app built with React, CSS, Bootstrap, and jQuery that generates QR 
 *🛠️ Tech Stack*
 
 Frontend: React, CSS, Bootstrap
+
 JavaScript: jQuery
+
 API: QRServer.com
