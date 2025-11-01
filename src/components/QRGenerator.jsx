@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import $ from "jquery";
+
 
 function QRGenerator() {
   const [text, setText] = useState("");
@@ -7,12 +8,36 @@ function QRGenerator() {
 
   const generateQR = (e) => {
     e.preventDefault();
-    if (!text.trim()) return;
+    if (!text.trim()) {
+      $(".form-control")
+        .addClass("border border-danger")
+        .fadeOut(100)
+        .fadeIn(100)
+        .fadeOut(100)
+        .fadeIn(100);
+      setTimeout(() => $(".form-control").removeClass("border border-danger"), 800);
+      return;
+    }
+    
     const apiUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(
       text
     )}&size=250x250`;
     setQrUrl(apiUrl);
+    $("#loading-spinner").fadeIn(200);
+$("#loading-spinner").fadeOut(300);
+
     $("#qr-img").hide().fadeIn(500);
+    if (!text.trim()) {
+  $(".form-control")
+    .addClass("border border-danger")
+    .fadeOut(100)
+    .fadeIn(100)
+    .fadeOut(100)
+    .fadeIn(100);
+  setTimeout(() => $(".form-control").removeClass("border border-danger"), 800);
+  return;
+}
+
   };
 
   const clearInput = () => {
@@ -35,6 +60,16 @@ const downloadQR = async () => {
       console.error("Failed to download QR:", error);
     }
   };
+  useEffect(() => {
+ 
+  $("input").on("focus", function () {
+    $(this).css("box-shadow", "0 0 10px #007bff");
+  });
+  $("input").on("blur", function () {
+    $(this).css("box-shadow", "none");
+  });
+}, []);
+
 
   return (
     <form onSubmit={generateQR} className="d-flex flex-column align-items-center">
@@ -51,6 +86,16 @@ const downloadQR = async () => {
           borderRadius: "10px",
         }}
       />
+      <div
+  id="loading-spinner"
+  className="text-center my-3"
+  style={{ display: "none" }}
+>
+  <div className="spinner-border text-primary" role="status">
+    <span className="visually-hidden">Loading...</span>
+  </div>
+</div>
+
 
       {qrUrl && (
         <div className="mb-4">
